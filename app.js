@@ -1,4 +1,5 @@
 const canvas = document.getElementById("jsCanvas");
+const colors = Array.from(document.getElementsByClassName("jsColor"));
 
 // Canvas 크기를 CSS로 만들기 때문에, 여기에서 다시 width, height 설정을 해준다.
 canvas.width = canvas.offsetWidth;
@@ -60,3 +61,10 @@ canvas.addEventListener("mouseup", stopPainting);
 
 // 마우스가 Canvas 밖으로 나감.
 canvas.addEventListener("mouseleave", stopPainting);
+
+colors.forEach((color) => {
+    color.addEventListener("click", (event) => {
+        const colorRgb = event.target.style.backgroundColor;
+        ctx.strokeStyle = colorRgb;
+    });
+});
