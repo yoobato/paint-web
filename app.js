@@ -2,6 +2,8 @@ const canvas = document.getElementById("jsCanvas");
 const range = document.getElementById("jsRange");
 const colors = document.getElementsByClassName("jsColor");
 
+let ctx;
+
 ////////////////////////
 // Canvas
 ////////////////////////
@@ -14,7 +16,7 @@ if (canvas) {
 
     // Canvas는 Context를 가지고 있다.
     // Context는 Canvas의 픽셀을 컨트롤하는 놈
-    const ctx = canvas.getContext("2d");
+    ctx = canvas.getContext("2d");
 
     // Default value
     ctx.strokeStyle = "#2c2c2c";
@@ -68,6 +70,15 @@ if (canvas) {
 
     // 마우스가 Canvas 밖으로 나감.
     canvas.addEventListener("mouseleave", stopPainting);
+}
+
+////////////////////////
+// Range (Brush size)
+////////////////////////
+if (range) {
+    range.addEventListener("input", (event) => {
+        ctx.lineWidth = event.target.value;
+    });
 }
 
 ////////////////////////
