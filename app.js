@@ -1,8 +1,13 @@
+const INITIAL_COLOR = "#2c2c2c";
+const INITIAL_BRUSH_SIZE = 2.5;
+
 const canvas = document.getElementById("jsCanvas");
 const range = document.getElementById("jsRange");
+const modeBtn = document.getElementById("jsMode");
 const colors = document.getElementsByClassName("jsColor");
 
 let ctx;
+let isFillingMode = false;
 
 ////////////////////////
 // Canvas
@@ -19,8 +24,9 @@ if (canvas) {
     ctx = canvas.getContext("2d");
 
     // Default value
-    ctx.strokeStyle = "#2c2c2c";
-    ctx.lineWidth = "2.5";
+    ctx.strokeStyle = INITIAL_COLOR;
+    ctx.fillStyle = INITIAL_COLOR;
+    ctx.lineWidth = INITIAL_BRUSH_SIZE;
 
     let painting = false;
 
@@ -60,16 +66,23 @@ if (canvas) {
         }
     });
 
-    // 마우스를 클릭한 상태
-    canvas.addEventListener("mousedown", (event) => {
+    // 마우스를 누른 상태
+    canvas.addEventListener("mousedown", () => {
         startPainting();
     });
 
-    // 마우스 클릭했다가 놓은 상태
+    // 마우스 눌렀다가 놓은 상태
     canvas.addEventListener("mouseup", stopPainting);
 
     // 마우스가 Canvas 밖으로 나감.
     canvas.addEventListener("mouseleave", stopPainting);
+
+    canvas.addEventListener("click", () => {
+        if (isFillingMode) {
+            // x, y, width, height
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+    });
 }
 
 ////////////////////////
@@ -77,7 +90,18 @@ if (canvas) {
 ////////////////////////
 if (range) {
     range.addEventListener("input", (event) => {
-        ctx.lineWidth = event.target.value;
+        const size = event.target.value;
+        ctx.lineWidth = size;
+    });
+}
+
+////////////////////////
+// Mode (Fill / Paint)
+////////////////////////
+if (modeBtn) {
+    modeBtn.addEventListener("click", () => {
+        isFillingMode = !isFillingMode;
+        modeBtn.innerText = isFillingMode ? "Paint" : "Fill";
     });
 }
 
@@ -90,6 +114,7 @@ if (colors) {
         color.addEventListener("click", (event) => {
             const colorRgb = event.target.style.backgroundColor;
             ctx.strokeStyle = colorRgb;
+            ctx.fillStyle = colorRgb;
         });
     });
 }
