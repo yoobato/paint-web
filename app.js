@@ -4,6 +4,7 @@ const INITIAL_BRUSH_SIZE = 2.5;
 const canvas = document.getElementById("jsCanvas");
 const range = document.getElementById("jsRange");
 const modeBtn = document.getElementById("jsMode");
+const saveBtn = document.getElementById("jsSave");
 const colors = document.getElementsByClassName("jsColor");
 
 let ctx;
@@ -22,6 +23,10 @@ if (canvas) {
     // Canvas는 Context를 가지고 있다.
     // Context는 Canvas의 픽셀을 컨트롤하는 놈
     ctx = canvas.getContext("2d");
+
+    // Canvas의 배경을 흰색으로 설정해준다. (기본적으로는 transparent)
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Default value
     ctx.strokeStyle = INITIAL_COLOR;
@@ -83,6 +88,11 @@ if (canvas) {
             ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
     });
+
+    // 우클릭했을 때 뜨는 메뉴 (save image, copy image 등)
+    canvas.addEventListener("contextmenu", (event) => {
+        event.preventDefault();
+    });
 }
 
 ////////////////////////
@@ -102,6 +112,24 @@ if (modeBtn) {
     modeBtn.addEventListener("click", () => {
         isFillingMode = !isFillingMode;
         modeBtn.innerText = isFillingMode ? "Paint" : "Fill";
+    });
+}
+
+////////////////////////
+// Save
+////////////////////////
+if (saveBtn) {
+    saveBtn.addEventListener("click", () => {
+        // Canvas로부터 이미지 추출
+        const image = canvas.toDataURL("image/png");
+
+        // 가상의 다운로드 링크(a;anchor)를 만들다
+        const link = document.createElement("a");
+        link.href = image;
+        // 다운로드될 파일 이름
+        link.download = "paintjs_export";
+        // 링크를 클릭된 것처럼 처리
+        link.click();
     });
 }
 
